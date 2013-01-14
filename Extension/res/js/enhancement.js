@@ -48,8 +48,7 @@ enhancement.prototype = {
 		executes a callback function. 
 		server - Name of the server to load.
 		callback - Function executed as callback(result), where result is a map of players online,
-			null is sent when the loading failed (eg. disconnection).
-	*/
+			null is sent when the loading failed (eg. disconnection). */
 	loadPlayersOnline: function(server, callback) {
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', this.playersOnlineBaseURL + server);
@@ -67,6 +66,7 @@ enhancement.prototype = {
 		};
 		xhr.send();
 	},
+	/** Parses the raw html loaded from the server's page of online characters */
 	parsePlayersOnline: function(server, responseText) {
 		var row = null;
 		var players = {};
@@ -84,5 +84,5 @@ enhancement.prototype = {
 		var e = document.createElement('div');
 		e.innerHTML = input;
 		return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-	}
+	},
 };
