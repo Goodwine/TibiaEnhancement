@@ -1,0 +1,54 @@
+{
+    "manifest_version": 2,
+    "name": "Tibia Website Enhancement",
+    "description": "Enhances your Tibia experience when looking at characters, guilds, forums and fansites.",
+    "background": {
+      "scripts": ["res/js/enhancement.js"]
+    },
+    "browser_action": {
+      "default_icon": "icons/19.png",
+      "default_title": "Tibia Website Enhancement"
+    },
+    "content_scripts": [ /*{
+      "js": [ "script.js" ],
+      "matches": [ "http://*.tibia.com/*" ],
+      "run_at": "document_start"
+    }, {
+      "js": [ "scripts/staminaml.js" ],
+      "matches": [ "http://*.tibiaml.com/stamina_calculator/" ]
+    }, */{
+      "js": [ "res/js/newslinks.js" ],
+      "matches": [
+        "http://*.tibia.com/news/?*subtopic=latestnews*" ,
+        "http://*.tibia.com/news/?*subtopic=newsarchive*"
+        ]
+    }/*, {
+      "js": [ "scripts/bbcode.js", "scripts/postChar.js" ],
+      "matches": [ "http://forum.tibia.com/forum*" ]
+    }, {
+      "js": [ "scripts/character.js" ],
+      "matches": [ "http://*.tibia.com/community/?*subtopic=character*" ]
+    }, {
+      "js": [ "scripts/forum.js" ],
+      "matches": [ "http://forum.tibia.com/forum/?*action=thread*" ]
+    }, {
+      "js": [ "scripts/guild.js" ],
+      "matches": [ "http://*.tibia.com/community/?*subtopic=guilds*" ]
+    }, {
+      "js": [ "scripts/whois.js" ],
+      "matches": [ "http://*.tibia.com/community/?*subtopic=worlds*" ]
+    }*/ ],
+    "icons": {
+      "128": "icons/128.png",
+      "16": "icons/16.png",
+      "19": "icons/19.png",
+      "256": "icons/256.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "64": "icons/64.png"
+    },
+    "minimum_chrome_version": "20",
+    "options_page": "options.html",
+    "permissions": [ "http://*.tibia.com/*" ],
+    "version": "2.0.0"
+}

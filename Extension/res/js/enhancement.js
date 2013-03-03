@@ -12,7 +12,7 @@ enhancement.prototype = {
 	'Tenebra','Thoria','Titania','Trimera','Unitera','Valoria','Vinera','Xantera','Xerena','Zanera'],
 	/** playersOnline will be a map of serverName=>{name,lvl,voc} */
 	playersOnline: {},
-	playersOnlineTimeout: 300000, // 
+	playersOnlineTimeout: 300000, //
 	playersOnlineBaseURL: 'http://www.tibia.com/community/?subtopic=worlds&world=',
 	playersOnlineRegExp: /subtopic=characters.*?name=(.*?)['"]\s*>(.*?)<\/a><\/td><td.*?>(\d*?)<\/td><td.*?>(.*?)<\/td>/ig,
 	/** Flag used to queue XHR one after another if true, all at once if false */
@@ -45,7 +45,7 @@ enhancement.prototype = {
 		}
 	},
 	/** Loads a map of players online {name:{lvl,voc}}, saves it to the map playersOnline and
-		executes a callback function. 
+		executes a callback function.
 		server - Name of the server to load.
 		callback - Function executed as callback(result), where result is a map of players online,
 			null is sent when the loading failed (eg. disconnection). */
