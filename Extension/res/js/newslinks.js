@@ -1,7 +1,7 @@
-/** This is a content script to add [Permalink] to the news and newstickers. 
+/** This is a content script to add [Permalink] to the news and newstickers.
 	Note: this will have to change if Cip implements sticky news.
-	
-	This content script is supposed to work only in http://www.tibia.com/news/?subtopic=latestnews 
+
+	This content script is supposed to work only in http://www.tibia.com/news/?subtopic=latestnews
 	and in http://www.tibia.com/news/?subtopic=newsarchive */
 
 /** This function runs a XHR with POST to get the contents, it will add [Permalink] as well. */
@@ -73,7 +73,7 @@ function loadNewsLinks() {
 	xhr.send(params);
 }
 
-if (/subtopic=newsarchive/.test(location.search)) {
+if (/subtopic=newsarchive/i.test(location.search)) {
 	/*	No need for XHR when we are already there. This cleans up the URL because normally you get
 		more parameters used when clicking the 'Back' button, which is not really part of the URL */
 	var link = document.createElement('a');
