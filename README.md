@@ -26,7 +26,7 @@ Features
 * Add more BBCodes to the forum.
 * Links to houses.
 * MultiLanguage (this will be the last thing implemented)
-*   Set a default character to post, so you avoid having to keep selecting it.  
+* Set a default character to post, so you avoid having to keep selecting it.  
     
     **Want more features?**   
     Make a feature request in here:  
@@ -35,6 +35,13 @@ Features
     **Found a Bug?**  
     Report a bug here:  
     https://code.google.com/p/tibia-website-enhancement/issues/entry?template=Defect%20report%20from%20user
+
+Special Thanks
+--------------
+**From Goodwine**
+* Erig, because he is the one who started.
+* Myr Zelig / Myr Baku, for the nice logo.
+* Steven, for giving me the slight push I needed to start this.
 
 License
 -------
