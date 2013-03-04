@@ -1,5 +1,6 @@
-function enhancement(queueXHR) {
-	this.queueXHR = queueXHR; // This has to be moved to be loaded from the localStorage options later.
+// Initializer
+function enhancement() {
+	this.queueXHR = false; // This has to be moved to be loaded from the localStorage options later.
 }
 enhancement.prototype = {
 	serverList: ['Aldora','Amera','Antica','Arcania','Askara','Astera','Aurea','Aurera','Aurora',
@@ -86,3 +87,30 @@ enhancement.prototype = {
 		return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
 	}
 };
+
+// Create the extension's handler.
+tibia = new enhancement();
+
+// Handle various requests made by the content scripts.
+chrome.extension.onMessage.addListener(function (request, sender, callback) {
+  if(request.action != null) {
+    switch(request.action) {
+      default:
+        console.error("Unable to handle: " + request.action);
+      return;
+    }
+  } else {
+    // TODO: Add some other stuff maybe.
+  }
+});
+
+// Listen when the Browser Action button gets clicked and open the options page.
+chrome.browserAction.onClicked.addListener(function(tab) {
+  var optionsPage = {'url':chrome.extension.getURL('options.html')};
+  chrome.tabs.query(optionsPage, function (result) {console.log(result)});
+  chrome.tabs.query(optionsPage, function (result) {
+    if(result.length == 0) {
+      chrome.tabs.create({'url':chrome.extension.getURL('options.html')});
+    }
+  });
+});
