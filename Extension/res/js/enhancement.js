@@ -1,6 +1,9 @@
 // Initializer
 function enhancement() {
 	this.queueXHR = false; // This has to be moved to be loaded from the localStorage options later.
+	this.loadAllPlayersOnline();
+	setInterval(function () {this.loadAllPlayersOnline()}, this.playersOnlineTimeout);
+	 // Run this function every playersOnlineTimeout ms
 }
 enhancement.prototype = {
 	serverList: ['Aldora','Amera','Antica','Arcania','Askara','Astera','Aurea','Aurera','Aurora',
@@ -13,7 +16,16 @@ enhancement.prototype = {
 	'Tenebra','Thoria','Titania','Trimera','Unitera','Valoria','Vinera','Xantera','Xerena','Zanera'],
 	/** playersOnline will be a map of serverName=>{name,lvl,voc} */
 	playersOnline: {},
-	playersOnlineTimeout: 300000, //
+	serverReadCounter: [],
+	hasFinishedReading: function () {
+    return this.serverReadCounter.length >= this.serverList.length;
+	},
+	/** Appends something to the serverReadCounter to see when is everything loaded. */
+	increaseReadCounter: function () {
+    if(!this.hasFinishedReading())
+      this.serverReadCounter.push(0);
+	},
+	playersOnlineTimeout: 300000, // 5 minutes
 	playersOnlineBaseURL: 'http://www.tibia.com/community/?subtopic=worlds&world=',
 	playersOnlineRegExp: /subtopic=characters.*?name=(.*?)['"]\s*>(.*?)<\/a><\/td><td.*?>(\d*?)<\/td><td.*?>(.*?)<\/td>/ig,
 	/** Flag used to queue XHR one after another if true, all at once if false */
@@ -29,6 +41,7 @@ enhancement.prototype = {
 				if (this.readyState == 4) {
 					if (this.status == 200) {
 						this.__enhancement.parsePlayersOnline(this.__enhancement.serverList[this.__serverIndex], this.responseText);
+						this.__enhancement.increaseReadCounter();
 					}
 					if(this.__serverIndex < this.__enhancement.serverList.length) {
 						this.open('GET', this.__enhancement.playersOnlineBaseURL + this.__enhancement.serverList[this.__serverIndex]);
@@ -59,6 +72,7 @@ enhancement.prototype = {
 				var players = null;
 				if (this.status == 200) {
 					players = this.__enhancement.parsePlayersOnline(server, this.responseText);
+					this.__enhancement.increaseReadCounter();
 				}
 				if(typeof callback === 'function') {
 					callback(players);
@@ -91,17 +105,35 @@ enhancement.prototype = {
 // Create the extension's handler.
 tibia = new enhancement();
 
-// Handle various requests made by the content scripts.
+/** Handle various requests made by the content scripts.
+
+    request - implies the form {string action, ...}
+*/
 chrome.extension.onMessage.addListener(function (request, sender, callback) {
+  var response = {};
   if(request.action != null) {
     switch(request.action) {
+      case 'whois':
+        if(!tibia.hasFinishedReading()){
+          response.tryAgain = true;
+          break;
+        }
+        response.tryAgain = false;
+        if(request.server != null) {
+          if(request.name == null) {
+            response.playersOnline = tibia.playersOnline[request.server];
+          } else {
+            response.playersOnline = tibia.playersOnline[request.server][request.name];
+          }
+        } else if(request.playerList != null) {
+          // TODO Forum.
+        }
+        break;
       default:
-        console.error("Unable to handle: " + request.action);
-      return;
+        console.error("Unable to handle action: " + request.action);
     }
-  } else {
-    // TODO: Add some other stuff maybe.
   }
+  callback(response);
 });
 
 // Listen when the Browser Action button gets clicked and open the options page.
