@@ -133,6 +133,8 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
         console.error("Unable to handle action: " + request.action);
     }
   }
+  if(request.htmlDecode)
+	response.htmlDecode = tibia.htmlDecode.toString();
   callback(response);
 });
 
