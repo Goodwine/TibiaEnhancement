@@ -139,10 +139,11 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
 // Listen when the Browser Action button gets clicked and open the options page.
 chrome.browserAction.onClicked.addListener(function(tab) {
   var optionsPage = {'url':chrome.extension.getURL('options.html')};
-  chrome.tabs.query(optionsPage, function (result) {console.log(result)});
   chrome.tabs.query(optionsPage, function (result) {
     if(result.length == 0) {
       chrome.tabs.create({'url':chrome.extension.getURL('options.html')});
+    } else {
+      chrome.tabs.update(result[0].id, {'active': true});
     }
   });
 });
