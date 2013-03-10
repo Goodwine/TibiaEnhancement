@@ -32,7 +32,7 @@
       "js": [ "scripts/forum.js" ],
       "matches": [ "http://forum.tibia.com/forum/?*action=thread*" ]
     }*/, {
-      "js": [ "res/js/whoisonline.js" ],
+      "js": [ "res/js/guilds.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=guilds*" ]
     }/*, {
       "js": [ "scripts/whois.js" ],
