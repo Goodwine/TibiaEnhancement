@@ -2,8 +2,7 @@
 function enhancement() {
 	this.queueXHR = false; // This has to be moved to be loaded from the localStorage options later.
 	this.loadAllPlayersOnline();
-	setInterval(function () {this.loadAllPlayersOnline()}, this.playersOnlineTimeout);
-	 // Run this function every playersOnlineTimeout ms
+	// Run this function every playersOnlineTimeout ms
 }
 enhancement.prototype = {
 	serverList: ['Aldora','Amera','Antica','Arcania','Askara','Astera','Aurea','Aurera','Aurora',
@@ -86,7 +85,12 @@ enhancement.prototype = {
 		var row = null;
 		var players = {};
 		while ((row = this.playersOnlineRegExp.exec(responseText))) {
-			players[this.htmlDecode(row[2])] = {lvl: parseInt(row[3], 10), voc: this.htmlDecode(row[4])};
+      var vocation = this.htmlDecode(row[4]);
+			players[this.htmlDecode(row[2])] = {
+        lvl: parseInt(row[3], 10),
+        voc: vocation,
+        vocShort: this.shortenVocation(vocation)
+      };
 		}
 		this.playersOnline[server] = players;
 		return players;
@@ -98,15 +102,30 @@ enhancement.prototype = {
 		}
 		var e = document.createElement('div');
 		e.innerHTML = input;
-		return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+		return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue.replace(/\s/g, ' ');
+	},
+	/** Shortens Vocation */
+	shortenVocation: function (voc) {
+    if (voc == 'Knight')          return 'K';
+    if (voc == 'Elite Knight')    return 'EK';
+    if (voc == 'Paladin')         return 'P';
+    if (voc == 'Royal Paladin')   return 'RP';
+    if (voc == 'Sorcerer')        return 'S';
+    if (voc == 'Master Sorcerer') return 'MS';
+    if (voc == 'Druid')           return 'D';
+    if (voc == 'Elder Druid')     return 'ED';
+    if (voc == 'None')            return 'ROOK';
+    return '?';
 	}
 };
 
 // Create the extension's handler.
 tibia = new enhancement();
 
-/** Handle various requests made by the content scripts.
+// Refresh players online every once in a while.
+setInterval(function () {tibia.loadAllPlayersOnline()}, tibia.playersOnlineTimeout);
 
+/** Handle various requests made by the content scripts.
     request - implies the form {string action, ...}
 */
 chrome.extension.onMessage.addListener(function (request, sender, callback) {
