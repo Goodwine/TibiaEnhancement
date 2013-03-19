@@ -97,12 +97,14 @@ enhancement.prototype = {
   },
   /** Decodes HTML entities such as &nbsp; or &amp; */
   htmlDecode: function(input) {
-    if(/[<>]/.test(input)) {
+    if (/[<>]/.test(input)) {
       return "Invalid Input";
     }
-    var e = document.createElement('div');
-    e.innerHTML = input;
-    return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue.replace(/\s/g, ' ');
+    if (typeof(dumpDiv) == 'undefined' || !dumpDiv) {
+      dumpDiv = document.createElement('div');
+    }
+    dumpDiv.innerHTML = input;
+    return dumpDiv.childNodes.length === 0 ? "" : dumpDiv.childNodes[0].nodeValue.replace(/\s/g, ' ');
   },
   /** Shortens Vocation */
   shortenVocation: function (voc) {
@@ -118,7 +120,7 @@ enhancement.prototype = {
       case 'None':            return 'ROOK';
       default:                return '?';
     }
-  }
+  },
 };
 
 // Create the extension's handler.
