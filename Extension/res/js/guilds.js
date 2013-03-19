@@ -1,19 +1,22 @@
 /** This is a content script to get a list from the online characters supposedly stored locally.
 
-  This content script is supposed to work only in http://www.tibia.com/news/?subtopic=latestnews
-  and in http://www.tibia.com/news/?subtopic=newsarchive */
+  This content script is supposed to work only in http://www.tibia.com/news/?subtopic=guilds */
 
-/*chrome.extension.sendMessage({action:'whois', server: 'Danera'}, function (response) {
-  console.log(response);
-});*/
-
-server = document.getElementsByTagName('body')[0].innerHTML.match(/The guild was founded on (.*?) on/);
+/** Each has the form {name,row,rank,ranke,lvlvoc,indicator,online}
+    ranke is the element holding the rank name.
+    lvlvoc is the element holding the lvlvoc text.
+    indicator is the element that shows if online or not.
+*/
 characters = [];
 header = null;
 headerSpan = null;
+hide = false;
+hideUnhideAnchor = null;
 
+// This is to avoid being misguided by the guild's description.
+server = document.getElementsByTagName('body')[0].innerHTML.match(/The guild was founded on .*? on/g);
 if (server != null) {
-  server = server[1];
+  server = server[server.length - 1].match(/The guild was founded on (.*?) on/)[1];
   loadCharacters(server);
 }
 
@@ -35,8 +38,9 @@ function createLvlvoc(parent) {
 }
 
 function loadCharacters(server) {
-  chrome.extension.sendMessage({action: 'whois', server: server}, function (response) {
+  chrome.extension.sendMessage({action: 'whois', server: server, getPlayersOnlineTimeout: true}, function (response) {
     if (response.tryAgain === false) {
+      setTimeout(function(){loadCharacters(server);}, response.playersOnlineTimeout);
       setOnlineStatus(response.playersOnline);
     } else {
       setTimeout(function(){loadCharacters(server);}, 1000);
@@ -60,16 +64,17 @@ function setOnlineStatus(playersOnline) {
       header = memberList[0].getElementsByTagName('td')[0];
       var rank = null;
       for (var i = 2; i < memberList.length; i++) {
-        var tempRank = memberList[i].getElementsByTagName('td')[0].childNodes[0].nodeValue.trim();
+        var tempRank = memberList[i].firstElementChild.firstChild.nodeValue.trim();
         if (tempRank.length > 0)
           rank = tempRank;
         characters.push({
           'name': htmlDecode(characterNameRegex.exec(memberList[i].innerHTML)[1]),
           'row': memberList[i],
           'rank': rank,
-          'ranke': null,
+          'ranke': memberList[i].firstElementChild.firstChild,
           'lvlvoc': null,
-          'indicator': null
+          'indicator': null,
+          'online': false
         });
       }
     }
@@ -84,10 +89,24 @@ function setOnlineStatus(playersOnline) {
       var player = playersOnline[characters[i].name];
       characters[i].lvlvoc.style.display = '';
       characters[i].lvlvoc.innerText = 'Lv:' + player.lvl + ' Voc:' + player.vocShort;
+      characters[i].online = true;
     } else {
       characters[i].lvlvoc.style.display = 'none';
+      characters[i].online = false;
     }
   }
+  if (!hideUnhideAnchor) {
+    hideUnhideAnchor = document.createElement('a');
+    hideUnhideAnchor.style.fontWeight = 'bold';
+    hideUnhideAnchor.style.marginLeft = '5px';
+    hideUnhideAnchor.href = 'javascript:;';
+    hideUnhideAnchor.onclick = function(e) {
+      hide = !hide;
+      hideUndhide();
+    };
+    header.appendChild(hideUnhideAnchor);
+  }
+  hideUndhide();
   if (!headerSpan) {
     headerSpan = document.createElement('span');
     headerSpan.style.fontSize = 'xx-small';
@@ -96,4 +115,29 @@ function setOnlineStatus(playersOnline) {
     header.appendChild(headerSpan);
   }
   headerSpan.innerHTML =  'Guild Members: ' + characters.length + ' (Online: ' + totalOnline + ') &nbsp; Online on ' + server + ': ' + Object.keys(playersOnline).length;
+}
+
+function hideUndhide() {
+  hideUnhideAnchor.className = hide ? 'red' : 'green';
+  hideUnhideAnchor.innerHTML = hide ? '[Show Offline]' : '[Show Online Only]';
+  var lastUsedRank = null;
+  var evenRow = '#F1E0C6';
+  var pairRow = '#D4C0A1';
+  for (var i = 0, j = 0; i < characters.length; i++) {
+    characters[i].row.style.display = hide && !characters[i].online ? 'none' : '';
+    if(characters[i].row.style.display == '') {
+      if(lastUsedRank != characters[i].rank) {
+        lastUsedRank = characters[i].rank;
+        characters[i].ranke.nodeValue = lastUsedRank;
+        j++;
+      } else {
+        characters[i].ranke.nodeValue = '';
+      }
+      if (j % 2 == 0) {
+        characters[i].row.style.backgroundColor = pairRow;
+      } else {
+        characters[i].row.style.backgroundColor = evenRow;
+      }
+    }
+  }
 }
