@@ -106,16 +106,18 @@ enhancement.prototype = {
   },
   /** Shortens Vocation */
   shortenVocation: function (voc) {
-    if (voc == 'Knight')          return 'K';
-    if (voc == 'Elite Knight')    return 'EK';
-    if (voc == 'Paladin')         return 'P';
-    if (voc == 'Royal Paladin')   return 'RP';
-    if (voc == 'Sorcerer')        return 'S';
-    if (voc == 'Master Sorcerer') return 'MS';
-    if (voc == 'Druid')           return 'D';
-    if (voc == 'Elder Druid')     return 'ED';
-    if (voc == 'None')            return 'ROOK';
-    return '?';
+    switch(voc) {
+      case 'Knight':          return 'K';
+      case 'Elite Knight':    return 'EK';
+      case 'Paladin':         return 'P';
+      case 'Royal Paladin':   return 'RP';
+      case 'Sorcerer':        return 'S';
+      case 'Master Sorcerer': return 'MS';
+      case 'Druid':           return 'D';
+      case 'Elder Druid':     return 'ED';
+      case 'None':            return 'ROOK';
+      default:                return '?';
+    }
   }
 };
 
@@ -152,6 +154,8 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
         console.error("Unable to handle action: " + request.action);
     }
   }
+  if(request.getPlayersOnlineTimeout)
+    response.playersOnlineTimeout = tibia.playersOnlineTimeout;
   callback(response);
 });
 
