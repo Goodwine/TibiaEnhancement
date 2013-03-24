@@ -1,8 +1,13 @@
 // Initializer
 function enhancement() {
   this.queueXHR = false; // This has to be moved to be loaded from the localStorage options later.
+  this.indicator = 'icon'; // This has to be moved to be loaded from the localStorage options later.
+  this.iconFlags = {
+    guild: ['tibiaml', 'exhiti', 'pskonejott'],
+    character: ['tibiaml', 'exhiti', 'pskonejott'],
+    forum: ['tibiaml', 'exhiti', 'pskonejott']
+  };// This has to be moved to be loaded from the localStorage options later.
   this.loadAllPlayersOnline();
-  // Run this function every playersOnlineTimeout ms
 }
 enhancement.prototype = {
   serverList: ['Aldora','Amera','Antica','Arcania','Askara','Astera','Aurea','Aurera','Aurora',
@@ -29,6 +34,8 @@ enhancement.prototype = {
   playersOnlineRegExp: /subtopic=characters.*?name=(.*?)['"]\s*>(.*?)<\/a><\/td><td.*?>(\d*?)<\/td><td.*?>(.*?)<\/td>/ig,
   /** Flag used to queue XHR one after another if true, all at once if false */
   queueXHR: false,
+  /** Kind of indicator to use. */
+  indicator: 'icon',
   /** Runs loadPlayersOnline for every server in the list. */
   loadAllPlayersOnline: function() {
     if (this.queueXHR) {
@@ -85,8 +92,8 @@ enhancement.prototype = {
     var row = null;
     var players = {};
     while ((row = this.playersOnlineRegExp.exec(responseText))) {
-      var vocation = this.htmlDecode(row[4]);
-      players[this.htmlDecode(row[2])] = {
+      var vocation = htmlDecode(row[4]);
+      players[htmlDecode(row[2])] = {
         lvl: parseInt(row[3], 10),
         voc: vocation,
         vocShort: this.shortenVocation(vocation)
@@ -94,17 +101,6 @@ enhancement.prototype = {
     }
     this.playersOnline[server] = players;
     return players;
-  },
-  /** Decodes HTML entities such as &nbsp; or &amp; */
-  htmlDecode: function(input) {
-    if (/[<>]/.test(input)) {
-      return "Invalid Input";
-    }
-    if (typeof(dumpDiv) == 'undefined' || !dumpDiv) {
-      dumpDiv = document.createElement('div');
-    }
-    dumpDiv.innerHTML = input;
-    return dumpDiv.childNodes.length === 0 ? "" : dumpDiv.childNodes[0].nodeValue.replace(/\s/g, ' ');
   },
   /** Shortens Vocation */
   shortenVocation: function (voc) {
@@ -121,6 +117,36 @@ enhancement.prototype = {
       default:                return '?';
     }
   },
+  iconList: {
+    tibiaml: {
+      name: 'Tibia ML',
+      url: 'http://en.tibiaml.com/character/*PLAYER_NAME_HERE*',
+      icon: chrome.extension.getURL('/res/img/tibiaml.png')
+    },
+    exhiti: {
+      name: 'Exhiti',
+      url: 'http://www.exhiti.com/experience_history/*PLAYER_NAME_HERE*',
+      urlServer: 'http://www.exhiti.com/top_experience/gameworld/*SERVER_NAME_HERE*',
+      icon: chrome.extension.getURL('/res/img/exhiti.png')
+    },
+    pskonejott: {
+      name: 'Pskonejott',
+      url: 'http://www.pskonejott.com/otc_display.php?character=*PLAYER_NAME_HERE*',
+      urlServer: 'http://www.pskonejott.com/otc_display.php?server=*SERVER_NAME_HERE*',
+      icon: chrome.extension.getURL('/res/img/pskonejott.ico')
+    },
+    guildstats: {
+      name: 'Guild Stats',
+      url: 'http://www.guildstats.eu/character?nick=*PLAYER_NAME_HERE*',
+      urlServer: 'http://www.guildstats.eu/guilds?world=*SERVER_NAME_HERE*',
+      icon: chrome.extension.getURL('/res/img/guildstats.png')
+    }
+  },
+  iconFlags: {
+    guild: ['tibiaml', 'exhiti', 'pskonejott'],
+    character: ['tibiaml', 'exhiti', 'pskonejott'],
+    forum: ['tibiaml', 'exhiti', 'pskonejott']
+  }
 };
 
 // Create the extension's handler.
@@ -129,35 +155,31 @@ tibia = new enhancement();
 // Refresh players online every once in a while.
 setInterval(function () {tibia.loadAllPlayersOnline()}, tibia.playersOnlineTimeout);
 
-/** Handle various requests made by the content scripts.
-    request - implies the form {string action, ...}
-*/
+/** Handle various requests made by the content scripts. */
 chrome.extension.onMessage.addListener(function (request, sender, callback) {
   var response = {};
-  if(request.action != null) {
-    switch(request.action) {
-      case 'whois':
-        if(!tibia.hasFinishedReading()){
-          response.tryAgain = true;
-          break;
+  if(request.getPlayersOnline) {
+    if(!tibia.hasFinishedReading()){
+      response.tryAgain = true;
+    } else {
+      response.tryAgain = false;
+      if(request.server != null) {
+        if(request.name == null) {
+          response.playersOnline = tibia.playersOnline[request.server];
+        } else {
+          response.playersOnline = tibia.playersOnline[request.server][request.name];
         }
-        response.tryAgain = false;
-        if(request.server != null) {
-          if(request.name == null) {
-            response.playersOnline = tibia.playersOnline[request.server];
-          } else {
-            response.playersOnline = tibia.playersOnline[request.server][request.name];
-          }
-        } else if(request.playerList != null) {
-          // TODO Forum.
-        }
-        break;
-      default:
-        console.error("Unable to handle action: " + request.action);
+      } else if(request.playerList != null) {
+        // TODO Forum.
+      }
     }
   }
   if(request.getPlayersOnlineTimeout)
     response.playersOnlineTimeout = tibia.playersOnlineTimeout;
+  if(request.getIndicator)
+    response.indicator = tibia.indicator;
+  if(request.getIcons)
+    response.icons = {iconList: tibia.iconList, iconFlags: tibia.iconFlags[request.iconFlags]};
   callback(response);
 });
 

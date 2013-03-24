@@ -3,7 +3,10 @@
     "name": "Tibia Website Enhancement",
     "description": "Enhances your Tibia experience when looking at characters, guilds, forums and fansites.",
     "background": {
-      "scripts": ["res/js/enhancement.js"]
+      "scripts": [
+        "res/js/common.js",
+        "res/js/enhancement.js"
+      ]
     },
     "browser_action": {
       "default_icon": "icons/19.png",
@@ -32,7 +35,7 @@
       "js": [ "scripts/forum.js" ],
       "matches": [ "http://forum.tibia.com/forum/?*action=thread*" ]
     }*/, {
-      "js": [ "res/js/guilds.js" ],
+      "js": [ "res/js/common.js", "res/js/guilds.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=guilds*" ]
     }/*, {
       "js": [ "scripts/whois.js" ],
@@ -50,5 +53,15 @@
     "minimum_chrome_version": "20",
     "options_page": "options.html",
     "permissions": [ "tabs", "http://*.tibia.com/*" ],
+    "web_accessible_resources": [
+      "res/img/exhiti.png",
+      "res/img/female.png",
+      "res/img/male.png",
+      "res/img/pskonejott.ico",
+      "res/img/gray_indicator.svg",
+      "res/img/green_indicator.svg",
+      "res/img/tibiaml.png",
+      "res/img/guildstats.png"
+    ],
     "version": "2.0.0"
 }
