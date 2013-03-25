@@ -85,6 +85,7 @@ function createIcons(name, serverflag, iconList, iconFlags, parent, flt) {
       continue;
     var anchor = document.createElement('a');
     anchor.style.float = flt;
+    anchor.style.padding = '0 1px';
     if (serverflag)
       anchor.href = iconList[iconFlags[i]].urlServer.replace(/\*SERVER_NAME_HERE\*/, name);
     else

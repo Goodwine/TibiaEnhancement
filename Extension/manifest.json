@@ -28,10 +28,10 @@
     }/*, {
       "js": [ "scripts/bbcode.js", "scripts/postChar.js" ],
       "matches": [ "http://forum.tibia.com/forum*" ]
-    }, {
+    }*/, {
       "js": [ "res/js/common.js", "res/js/character.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=character*" ]
-    }, {
+    }/*, {
       "js": [ "scripts/forum.js" ],
       "matches": [ "http://forum.tibia.com/forum/?*action=thread*" ]
     }*/, {
