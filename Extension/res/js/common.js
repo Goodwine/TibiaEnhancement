@@ -66,7 +66,7 @@ function setIndicator(element, indicator, online) {
 
 function createIcons(name, serverflag, iconList, iconFlags, parent, flt) {
   for(var i in iconFlags) {
-    if (serverflag && !iconList.urlServer)
+    if (serverflag && !iconList[iconFlags[i]].urlServer)
       continue;
     var anchor = document.createElement('a');
     anchor.style.float = flt;

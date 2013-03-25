@@ -3,9 +3,10 @@ function enhancement() {
   this.queueXHR = false; // This has to be moved to be loaded from the localStorage options later.
   this.indicator = 'icon'; // This has to be moved to be loaded from the localStorage options later.
   this.iconFlags = {
-    guild: ['tibiaml', 'exhiti', 'pskonejott'],
-    character: ['tibiaml', 'exhiti', 'pskonejott'],
-    forum: ['tibiaml', 'exhiti', 'pskonejott']
+    guild: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
+    worlds: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
+    character: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
+    forum: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats']
   };// This has to be moved to be loaded from the localStorage options later.
   this.loadAllPlayersOnline();
 }
@@ -144,6 +145,7 @@ enhancement.prototype = {
   },
   iconFlags: {
     guild: ['tibiaml', 'exhiti', 'pskonejott'],
+    worlds: ['tibiaml', 'exhiti', 'pskonejott'],
     character: ['tibiaml', 'exhiti', 'pskonejott'],
     forum: ['tibiaml', 'exhiti', 'pskonejott']
   }

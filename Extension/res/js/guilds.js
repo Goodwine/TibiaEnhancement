@@ -7,7 +7,6 @@
     lvlvoc is the element holding the lvlvoc text.
     indicator is the element that shows if online or not.
 */
-
 characters = [];
 header = null;
 headerSpan = null;

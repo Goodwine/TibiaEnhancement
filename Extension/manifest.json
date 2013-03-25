@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Tibia Website Enhancement",
-    "description": "Enhances your Tibia experience when looking at characters, guilds, forums and fansites.",
+    "description": "Enhances your Tibia experience when browsing the website.",
     "background": {
       "scripts": [
         "res/js/common.js",
@@ -13,7 +13,7 @@
       "default_title": "Tibia Website Enhancement"
     },
     "content_scripts": [ /*{
-      "js": [ "script.js" ],
+      "js": [ "res/js/common.js" ],
       "matches": [ "http://*.tibia.com/*" ],
       "run_at": "document_start"
     }, {
@@ -29,7 +29,7 @@
       "js": [ "scripts/bbcode.js", "scripts/postChar.js" ],
       "matches": [ "http://forum.tibia.com/forum*" ]
     }, {
-      "js": [ "scripts/character.js" ],
+      "js": [ "res/js/common.js", "res/js/character.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=character*" ]
     }, {
       "js": [ "scripts/forum.js" ],
@@ -37,10 +37,10 @@
     }*/, {
       "js": [ "res/js/common.js", "res/js/guilds.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=guilds*" ]
-    }/*, {
-      "js": [ "scripts/whois.js" ],
+    }, {
+      "js": [ "res/js/common.js", "res/js/worlds.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=worlds*" ]
-    }*/ ],
+    } ],
     "icons": {
       "128": "icons/128.png",
       "16": "icons/16.png",
