@@ -64,6 +64,21 @@ function setIndicator(element, indicator, online) {
   }
 }
 
+/** Creates the icon DOMelements and appends it to a parent.
+
+  @param name
+    What server or which player to link
+  @param serverflag
+    bool, if we are looking for a server or for players
+  @param iconList
+    json, this is actually a map and not a list. format is of each element is
+    {name, url, urlServer, icon}
+  @param iconFlags
+    array of str, this are the keys to be used from the iconList.
+  @param parent
+    elment which will contain the created elements.
+  @param flt
+    str, sets the css property float. */
 function createIcons(name, serverflag, iconList, iconFlags, parent, flt) {
   for(var i in iconFlags) {
     if (serverflag && !iconList[iconFlags[i]].urlServer)
