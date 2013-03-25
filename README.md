@@ -27,14 +27,10 @@ Features
 * Links to houses.
 * MultiLanguage (this will be the last thing implemented)
 * Set a default character to post, so you avoid having to keep selecting it.  
+* Star threads for easy follow up.
     
-    **Want more features?**   
-    Make a feature request in here:  
-    https://code.google.com/p/tibia-website-enhancement/issues/entry?template=Feature%20Request
-    
-    **Found a Bug?**  
-    Report a bug here:  
-    https://code.google.com/p/tibia-website-enhancement/issues/entry?template=Defect%20report%20from%20user
+    **Found a bug or want more features?**   
+    https://github.com/Goodwine/TibiaEnhancement/issues/new
 
 Special Thanks
 --------------
