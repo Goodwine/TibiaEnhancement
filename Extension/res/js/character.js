@@ -27,14 +27,18 @@ if(/<b>Character Information<\/b>/.test(document.getElementsByTagName('body')[0]
       break;
       case 'World:':
         var anchor = document.createElement('a');
-        anchor.href = 'http://.tibia.com/community/?subtopic=worlds&world=' + server;
+        anchor.href = 'http://www.tibia.com/community/?subtopic=worlds&world=' + server;
         anchor.innerText = server;
         cell.innerHTML = '';
         cell.appendChild(anchor);
         setIcons(server, cell, true);
       break;
       case 'House:':
-        // TODO House Linker
+        var info = cell.innerHTML.match(/(.*?)\s*\((.*?)\)\sis\spaid\suntil/);
+        var anchor = document.createElement('a');
+        anchor.style.float = 'left';
+        anchor.style.marginRight = '3px';
+        setHouseLink(cell, anchor, info[2], server, htmlDecode(info[1]));
       break;
     }
   }
@@ -71,4 +75,20 @@ function setOnlineStatus(name, server, parent) {
       setTimeout(function(){setOnlineStatus(name, server, parent);}, 1000);
     }
   });
+}
+
+function setHouseLink(cell, anchor, town, world, name) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'http://www.tibia.com/community/?subtopic=houses&world=' + world + '&town=' + town);
+  xhr.onreadystatechange = function () {
+    if(this.readyState == 4 && this.status == 200) {
+      var regExp = new RegExp(name.replace(/\s/g, '&#160;') + '.*?' + '<INPUT TYPE=hidden NAME=houseid VALUE=(.*?)>', 'i');
+      var code = this.responseText.replace(/\s/g, ' ').match(regExp)[1];
+      anchor.href = 'http://www.tibia.com/community/?subtopic=houses&page=view&world=' + world + '&houseid=' + code;
+      anchor.innerText = name;
+      cell.innerHTML = cell.innerHTML.replace(info[1], '');
+      cell.appendChild(anchor);
+    }
+  }
+  xhr.send();
 }

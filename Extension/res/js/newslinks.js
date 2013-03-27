@@ -19,7 +19,7 @@ function loadNewsLinks() {
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'http://www.tibia.com/news/?subtopic=newsarchive');
 	xhr.onreadystatechange = function() {
-		if(xhr.readyState == 4 && xhr.status == 200) {
+		if(this.readyState == 4 && this.status == 200) {
 			var newsHeadlines = document.getElementsByClassName('NewsHeadlineText');
 			var i = 0;
 			var newsTickers = document.getElementsByClassName('NewsTickerText');
