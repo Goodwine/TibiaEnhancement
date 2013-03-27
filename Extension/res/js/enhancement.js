@@ -8,6 +8,8 @@ function enhancement() {
     character: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
     forum: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats']
   };// This has to be moved to be loaded from the localStorage options later.
+  if (localStorage['defaultCharacter'] != null)
+    this.defaultCharacter = localStorage['defaultCharacter'];
   this.loadAllPlayersOnline();
 }
 enhancement.prototype = {
@@ -148,7 +150,8 @@ enhancement.prototype = {
     worlds: ['tibiaml', 'exhiti', 'pskonejott'],
     character: ['tibiaml', 'exhiti', 'pskonejott'],
     forum: ['tibiaml', 'exhiti', 'pskonejott']
-  }
+  },
+  defaultCharacter: -1
 };
 
 // Create the extension's handler.
@@ -160,8 +163,8 @@ setInterval(function () {tibia.loadAllPlayersOnline()}, tibia.playersOnlineTimeo
 /** Handle various requests made by the content scripts. */
 chrome.extension.onMessage.addListener(function (request, sender, callback) {
   var response = {};
-  if(request.getPlayersOnline) {
-    if(!tibia.hasFinishedReading()){
+  if (request.getPlayersOnline) {
+    if (!tibia.hasFinishedReading()){
       response.tryAgain = true;
     } else {
       response.tryAgain = false;
@@ -176,12 +179,19 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
       }
     }
   }
-  if(request.getPlayersOnlineTimeout)
+  if (request.getPlayersOnlineTimeout)
     response.playersOnlineTimeout = tibia.playersOnlineTimeout;
-  if(request.getIndicator)
+  if (request.getIndicator)
     response.indicator = tibia.indicator;
-  if(request.getIcons)
+  if (request.getIcons)
     response.icons = {iconList: tibia.iconList, iconFlags: tibia.iconFlags[request.iconFlags]};
+  if (request.getDefaultCharacter)
+    response.defaultCharacter = tibia.defaultCharacter;
+  if (request.setDefaultCharacter) {
+    tibia.defaultCharacter = request.defaultCharacter;
+    localStorage['defaultCharacter'] = tibia.defaultCharacter;
+    response.defaultCharacter = tibia.defaultCharacter;
+  }
   callback(response);
 });
 

@@ -12,14 +12,14 @@
       "default_icon": "icons/19.png",
       "default_title": "Tibia Website Enhancement"
     },
-    "content_scripts": [ /*{
+    "content_scripts": [ {
       "js": [ "res/js/common.js" ],
       "matches": [ "http://*.tibia.com/*" ],
       "run_at": "document_start"
-    }, {
+    }/*, {
       "js": [ "scripts/staminaml.js" ],
       "matches": [ "http://*.tibiaml.com/stamina_calculator/" ]
-    }, */{
+    }*/, {
       "js": [ "res/js/newslinks.js" ],
       "matches": [
         "http://*.tibia.com/news/?*subtopic=latestnews*" ,
@@ -29,16 +29,16 @@
       "js": [ "scripts/bbcode.js", "scripts/postChar.js" ],
       "matches": [ "http://forum.tibia.com/forum*" ]
     }*/, {
-      "js": [ "res/js/common.js", "res/js/character.js" ],
+      "js": [ "res/js/character.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=character*" ]
-    }/*, {
-      "js": [ "scripts/forum.js" ],
-      "matches": [ "http://forum.tibia.com/forum/?*action=thread*" ]
-    }*/, {
-      "js": [ "res/js/common.js", "res/js/guilds.js" ],
+    }, {
+      "js": [ "res/js/forum.js" ],
+      "matches": [ "http://forum.tibia.com/forum*" ]
+    }, {
+      "js": [  "res/js/guilds.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=guilds*" ]
     }, {
-      "js": [ "res/js/common.js", "res/js/worlds.js" ],
+      "js": [ "res/js/worlds.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=worlds*" ]
     } ],
     "icons": {

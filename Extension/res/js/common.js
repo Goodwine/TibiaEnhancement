@@ -101,3 +101,36 @@ function createIcons(name, serverflag, iconList, iconFlags, parent, flt) {
     parent.style.whiteSpace = 'nowrap';
   }
 }
+
+/** Displays a pretty alert message on the screen that for a certain amount of time before it fades out.
+    note: The DOM element that will be used as the container is the <body>
+
+  @param message
+  @param displayTime
+    Time in ms that the message will be visible before it starts fading out.
+  @param fadeTime
+    Time in ms that the message will take to fade out.
+*/
+function htmlAlert(message, displayTime, fadeTime) {
+  var parent = document.getElementsByTagName('body')[0];
+  var alert = document.createElement('div');
+  alert.innerHTML = message;
+  alert.style.width = '400px';
+  alert.style.padding = '30px 10px';
+  alert.style.background = 'white';
+  alert.style.border = 'solid 5px black';
+  alert.style.borderRadius = '15px';
+  alert.style.position = 'fixed';
+  alert.style.top = '50%';
+  alert.style.left = '50%';
+  alert.style.textAlign = 'center';
+  alert.style.fontSize = '1em';
+  alert.style.fontFamily = 'sans-serif';
+  alert.style.zIndex = 9000000;
+  parent.appendChild(alert);
+  alert.style.marginTop = -alert.offsetHeight/2 + 'px';
+  alert.style.marginLeft = -alert.offsetWidth/2 + 'px';
+  alert.style.transition = alert.style.webkitTransition = 'opacity ' + fadeTime + 'ms';
+  setTimeout(function () { alert.style.opacity = 0; }, displayTime);
+  setTimeout(function () { parent.removeChild(alert) }, displayTime + fadeTime);
+}
