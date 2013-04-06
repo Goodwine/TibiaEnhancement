@@ -29,3 +29,69 @@ if (characterSelect.length > 0) {
   anchor.innerText = '[Set as default]';
   characterSelect.parentNode.appendChild(anchor);
 }
+
+/* Online/Offline Indicators */
+characters = [];
+charactersSimple = [];
+posts = document.getElementsByClassName('ForumPost');
+charRegExp = /<a.*?href=".*?subtopic=characters.*?">(.*?)<\/a>/i
+serverRegExp = /Inhabitant\s*of\s*(.*?)<br>/
+for (var i = 1; i < posts.length; i++) {
+  var charTextElement = posts[i].getElementsByClassName('PostCharacterText')[0];
+  var charText = charTextElement.innerHTML;
+  var name = htmlDecode(charText.match(charRegExp)[1]);
+  var server = charText.match(serverRegExp)[1];
+  var indElement = document.createElement('span');
+  charTextElement.insertBefore(indElement, charTextElement.firstElementChild.nextElementSibling);
+  characters.push({
+    name: name,
+    server: server,
+    indElement: indElement,
+    indicator: null,
+    iconParent: null,
+    iconElement: null
+  });
+  charactersSimple.push({name: name, server: server});
+}
+if (characters.length > 0) {
+  loadCharacters(charactersSimple);
+}
+
+function loadCharacters(charactersSimple) {
+  var request = {
+    getPlayersOnline: true,
+    playerList: charactersSimple,
+    getPlayersOnlineTimeout: true,
+    getIndicator: true
+  };
+  chrome.extension.sendMessage(request, function (response) {
+    if (response.tryAgain === false) {
+      setTimeout(function(){loadCharacters(charactersSimple);}, response.playersOnlineTimeout);
+      setOnlineStatus(response.playersOnline, response.indicator);
+    } else {
+      // Characters haven't been loaded yet, wait 1s and retry.
+      setTimeout(function(){loadCharacters(charactersSimple);}, 1000);
+    }
+  })
+}
+
+function setOnlineStatus(playersOnline, indicator) {
+  for (var i = 0; i < characters.length; i++) {
+    if (!characters[i].indicator)
+      characters[i].indicator = createIndicator(characters[i].indElement, 'right');
+    if (playersOnline[characters[i].name]) {
+      setIndicator(characters[i].indicator, indicator, true);
+    } else {
+      setIndicator(characters[i].indicator, indicator, false);
+    }
+  }
+}
+
+/* Fansite Icons */
+function setIcons() {
+  chrome.extension.sendMessage({getIcons: true, iconFlags: 'forum'}, function (response) {
+    for (var i = 0; i < characters.length; i++) {
+      createIcons(characters[i].name, false, response.icons.iconList, response.icons.iconFlags, characters[i].iconElement, 'left');
+    }
+  })
+}

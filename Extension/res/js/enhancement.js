@@ -175,7 +175,12 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
           response.playersOnline = tibia.playersOnline[request.server][request.name];
         }
       } else if(request.playerList != null) {
-        // TODO Forum.
+        response.playersOnline = {};
+        for (var i = 0; i < request.playerList.length; i++) {
+          if (tibia.playersOnline[request.playerList[i].server]) {
+            response.playersOnline[request.playerList[i].name] = tibia.playersOnline[request.playerList[i].server][request.playerList[i].name];
+          }
+        }
       }
     }
   }
