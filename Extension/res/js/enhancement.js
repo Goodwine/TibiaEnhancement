@@ -1,13 +1,11 @@
 // Initializer
 function enhancement() {
-  this.queueXHR = false; // This has to be moved to be loaded from the localStorage options later.
-  this.indicator = 'icon'; // This has to be moved to be loaded from the localStorage options later.
-  this.iconFlags = {
-    guild: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
-    worlds: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
-    character: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
-    forum: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats']
-  };// This has to be moved to be loaded from the localStorage options later.
+  if (localStorage['queueXHR'] != null)
+    this.queueXHR = localStorage['queueXHR'];
+  if (localStorage['indicator'] != null)
+    this.indicator = localStorage['indicator'];
+  if (localStorage['iconFlags'] != null)
+    this.iconFlags = localStorage['iconFlags'];
   if (localStorage['defaultCharacter'] != null)
     this.defaultCharacter = localStorage['defaultCharacter'];
   this.loadAllPlayersOnline();
