@@ -21,10 +21,7 @@
       "matches": [ "http://*.tibiaml.com/stamina_calculator/" ]
     }*/, {
       "js": [ "res/js/newslinks.js" ],
-      "matches": [
-        "http://*.tibia.com/news/?*subtopic=latestnews*" ,
-        "http://*.tibia.com/news/?*subtopic=newsarchive*"
-        ]
+      "matches": [ "http://*.tibia.com/news/*" ]
     }/*, {
       "js": [ "scripts/bbcode.js", "scripts/postChar.js" ],
       "matches": [ "http://forum.tibia.com/forum*" ]

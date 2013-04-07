@@ -6,6 +6,8 @@
 
 /** This function runs a XHR with POST to get the contents, it will add [Permalink] as well. */
 function loadNewsLinks() {
+  if(!document.getElementById('newsticker'))
+    return;
 	var newsHeadlineDates = document.getElementsByClassName('NewsHeadlineDate');
 	var newsTickerDates = document.getElementsByClassName('NewsTickerDate');
 	var beginDate = new Date(newsHeadlineDates[newsHeadlineDates.length - 1].innerText.trim().substring(0,11).replace(/\s/g, '.'));
@@ -73,19 +75,20 @@ function loadNewsLinks() {
 	xhr.send(params);
 }
 
-if (/subtopic=newsarchive/i.test(location.search)) {
-	/*	No need for XHR when we are already there. This cleans up the URL because normally you get
-		more parameters used when clicking the 'Back' button, which is not really part of the URL */
-	var link = document.createElement('a');
-	link.innerText = '[Permalink]';
-	link.href = 'http://www.tibia.com/news/?subtopic=newsarchive&id='+/[?&]id=(\d+)/.exec(location.search)[1];
-	link.style.position = 'absolute';
-	link.style.color = 'white';
-	link.style.fontSize = '7pt';
-	link.target = 'new';
-	link.style.right = '10px';
-	link.style.top = '8px';
-	document.getElementsByClassName('NewsHeadlineText')[0].parentElement.appendChild(link);
+/*	No need for XHR when we are already there. This cleans up the URL because normally you get
+  more parameters used when clicking the 'Back' button, which is not really part of the URL */
+newsArchiveId = /[?&]id=(\d+)/.exec(location.search);
+if(newsArchiveId && newsArchiveId.length > 0) {
+  var link = document.createElement('a');
+  link.innerText = '[Permalink]';
+  link.href = 'http://www.tibia.com/news/?subtopic=newsarchive&id=' + newsArchiveId[1];
+  link.style.position = 'absolute';
+  link.style.color = 'white';
+  link.style.fontSize = '7pt';
+  link.target = 'new';
+  link.style.right = '10px';
+  link.style.top = '8px';
+  document.getElementsByClassName('NewsHeadlineText')[0].parentElement.appendChild(link);
 } else {
 	loadNewsLinks();
 }
