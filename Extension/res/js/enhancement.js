@@ -21,14 +21,8 @@ enhancement.prototype = {
   'Tenebra','Thoria','Titania','Trimera','Unitera','Valoria','Vinera','Xantera','Xerena','Zanera'],
   /** playersOnline will be a map of serverName=>{name,lvl,voc} */
   playersOnline: {},
-  serverReadCounter: [],
   hasFinishedReading: function () {
-    return this.serverReadCounter.length >= this.serverList.length;
-  },
-  /** Appends something to the serverReadCounter to see when is everything loaded. */
-  increaseReadCounter: function () {
-    if(!this.hasFinishedReading())
-      this.serverReadCounter.push(0);
+    return Object.keys(this.playersOnline).length >= this.serverList.length;
   },
   playersOnlineTimeout: 300000, // 5 minutes
   playersOnlineBaseURL: 'http://www.tibia.com/community/?subtopic=worlds&world=',
@@ -48,7 +42,6 @@ enhancement.prototype = {
         if (this.readyState == 4) {
           if (this.status == 200) {
             this.__enhancement.parsePlayersOnline(this.__enhancement.serverList[this.__serverIndex], this.responseText);
-            this.__enhancement.increaseReadCounter();
           }
           if(this.__serverIndex < this.__enhancement.serverList.length) {
             this.open('GET', this.__enhancement.playersOnlineBaseURL + this.__enhancement.serverList[this.__serverIndex]);
@@ -79,7 +72,6 @@ enhancement.prototype = {
         var players = null;
         if (this.status == 200) {
           players = this.__enhancement.parsePlayersOnline(server, this.responseText);
-          this.__enhancement.increaseReadCounter();
         }
         if(typeof callback === 'function') {
           callback(players);
