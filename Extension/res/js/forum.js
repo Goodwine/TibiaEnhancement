@@ -33,28 +33,34 @@ if (characterSelect.length > 0) {
 /* Online/Offline Indicators */
 characters = [];
 charactersSimple = [];
-posts = document.getElementsByClassName('ForumPost');
+posts = document.getElementsByClassName('PostCharacterText');
 charRegExp = /<a.*?href=".*?subtopic=characters.*?">(.*?)<\/a>/i
 serverRegExp = /Inhabitant\s*of\s*(.*?)<br>/
-for (var i = 1; i < posts.length; i++) {
-  var charTextElement = posts[i].getElementsByClassName('PostCharacterText')[0];
-  var charText = charTextElement.innerHTML;
+for (var i = 0; i < posts.length; i++) {
+  // Skip cip's characters, there is no need for useless icons.
+  if (posts[i].getElementsByClassName('CipPostIcon').length > 0) {
+    continue;
+  }
+  var charText = posts[i].innerHTML;
   var name = htmlDecode(charText.match(charRegExp)[1]);
   var server = charText.match(serverRegExp)[1];
-  var indElement = document.createElement('span');
-  charTextElement.insertBefore(indElement, charTextElement.firstElementChild.nextElementSibling);
+  var indParent = document.createElement('span');
+  var iconElement = document.createElement('div');
+  posts[i].insertBefore(indParent, posts[i].firstElementChild.nextElementSibling);
+  posts[i].insertBefore(iconElement, posts[i].getElementsByClassName('ff_infotext')[0]);
+  posts[i].insertBefore(document.createElement('br'), posts[i].getElementsByClassName('ff_infotext')[0]);
   characters.push({
     name: name,
     server: server,
-    indElement: indElement,
+    indParent: indParent,
     indicator: null,
-    iconParent: null,
-    iconElement: null
+    iconElement: iconElement,
   });
   charactersSimple.push({name: name, server: server});
 }
 if (characters.length > 0) {
   loadCharacters(charactersSimple);
+  setIcons();
 }
 
 function loadCharacters(charactersSimple) {
@@ -78,7 +84,7 @@ function loadCharacters(charactersSimple) {
 function setOnlineStatus(playersOnline, indicator) {
   for (var i = 0; i < characters.length; i++) {
     if (!characters[i].indicator)
-      characters[i].indicator = createIndicator(characters[i].indElement, 'right');
+      characters[i].indicator = createIndicator(characters[i].indParent, 'right');
     if (playersOnline[characters[i].name]) {
       setIndicator(characters[i].indicator, indicator, true);
     } else {
