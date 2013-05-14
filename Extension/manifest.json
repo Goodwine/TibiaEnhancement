@@ -29,7 +29,7 @@
       "js": [ "res/js/character.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=character*" ]
     }, {
-      "js": [ "res/js/forum.js" ],
+      "js": [ "res/js/forum.js", "res/js/starThread.js" ],
       "matches": [ "http://forum.tibia.com/forum*" ]
     }, {
       "js": [  "res/js/guilds.js" ],
@@ -58,7 +58,9 @@
       "res/img/gray_indicator.svg",
       "res/img/green_indicator.svg",
       "res/img/tibiaml.png",
-      "res/img/guildstats.png"
+      "res/img/guildstats.png",
+      "res/img/star_on.gif",
+      "res/img/star_off.gif"
     ],
     "version": "2.0.0"
 }

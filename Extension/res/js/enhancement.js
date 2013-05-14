@@ -5,9 +5,11 @@ function enhancement() {
   if (localStorage['indicator'] != null)
     this.indicator = localStorage['indicator'];
   if (localStorage['iconFlags'] != null)
-    this.iconFlags = localStorage['iconFlags'];
+    this.iconFlags = JSON.parse(localStorage['iconFlags']);
   if (localStorage['defaultCharacter'] != null)
     this.defaultCharacter = localStorage['defaultCharacter'];
+  if (localStorage['starredThreads'] != null)
+    this.starredThreads = JSON.parse(localStorage['starredThreads']);
   this.loadAllPlayersOnline();
 }
 enhancement.prototype = {
@@ -141,7 +143,8 @@ enhancement.prototype = {
     character: ['tibiaml', 'exhiti', 'pskonejott'],
     forum: ['tibiaml', 'exhiti', 'pskonejott']
   },
-  defaultCharacter: -1
+  defaultCharacter: -1,
+  starredThreads:{}
 };
 
 // Create the extension's handler.
@@ -186,6 +189,16 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
     tibia.defaultCharacter = request.defaultCharacter;
     localStorage['defaultCharacter'] = tibia.defaultCharacter;
     response.defaultCharacter = tibia.defaultCharacter;
+  }
+  if(request.getStarredThreads) 
+    response.starredThreads = tibia.starredThreads;
+  if(request.toggleThreadStar && request.thread) {
+    if(tibia.starredThreads[request.thread.id])
+      delete tibia.starredThreads[request.thread.id];
+    else
+      tibia.starredThreads[request.thread.id] = request.thread;
+    localStorage['starredThreads'] = JSON.stringify(tibia.starredThreads);
+    response.starredThreads = tibia.starredThreads;
   }
   callback(response);
 });
