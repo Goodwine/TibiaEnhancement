@@ -190,7 +190,7 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
     localStorage['defaultCharacter'] = tibia.defaultCharacter;
     response.defaultCharacter = tibia.defaultCharacter;
   }
-  if(request.getStarredThreads) 
+  if(request.getStarredThreads)
     response.starredThreads = tibia.starredThreads;
   if(request.toggleThreadStar && request.thread) {
     if(tibia.starredThreads[request.thread.id])
@@ -199,6 +199,7 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
       tibia.starredThreads[request.thread.id] = request.thread;
     localStorage['starredThreads'] = JSON.stringify(tibia.starredThreads);
     response.starredThreads = tibia.starredThreads;
+    response.table = request.table;
   }
   callback(response);
 });
