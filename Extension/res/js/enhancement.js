@@ -37,17 +37,17 @@ enhancement.prototype = {
   loadAllPlayersOnline: function() {
     if (this.queueXHR) {
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', this.playersOnlineBaseURL + this.serverList[0]);
+      xhr.__serverIndex = 0;
+      xhr.open('GET', this.playersOnlineBaseURL + this.serverList[xhr.__serverIndex]);
       xhr.__enhancement = this;
-      xhr.__serverIndex = 1;
       xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
           if (this.status == 200) {
             this.__enhancement.parsePlayersOnline(this.__enhancement.serverList[this.__serverIndex], this.responseText);
           }
+          this.__serverIndex++;
           if(this.__serverIndex < this.__enhancement.serverList.length) {
             this.open('GET', this.__enhancement.playersOnlineBaseURL + this.__enhancement.serverList[this.__serverIndex]);
-            this.__serverIndex++;
             this.send();
           }
         }
