@@ -11,8 +11,7 @@ looked into a guild's page.
 Then some years ago TibiaML made a programming contest to make a tool useful for Tibia, and since developing a
 Chrome Extension was way easier than making a FireFox addon,
 [Tibia's Website Enhancement](https://chrome.google.com/webstore/detail/tibia-website-enhancement/jgbkpdolneinfmghjfeogblbggkojaab)
-was created.
-
+was created.  
 However this extension is very old and has a lot of optimizations that could be done. So now I'm building it again from
 the beginnning.
 
@@ -26,11 +25,11 @@ Features
 * Add more BBCodes to the forum.
 * Links to houses.
 * MultiLanguage (this will be the last thing implemented)
-* Set a default character to post, so you avoid having to keep selecting it.  
+* Set a default character to post, so you avoid having to keep selecting it.
 * Star threads for easy follow up.
-    
-    **Found a bug or want more features?**   
-    https://github.com/Goodwine/TibiaEnhancement/issues/new
+
+**Found a bug or want more features?**  
+https://github.com/Goodwine/TibiaEnhancement/issues/new
 
 Special Thanks
 --------------
@@ -38,6 +37,7 @@ Special Thanks
 * Erig, because he is the one who started.
 * Myr Zelig / Myr Baku, for the nice logo.
 * Steven, for giving me the slight push I needed to start this.
+* [roykolak](https://github.com/roykolak/) for his [Chrome Bootstrap](https://github.com/roykolak/chrome-bootstrap) CSS
 
 License
 -------
