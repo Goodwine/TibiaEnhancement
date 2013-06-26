@@ -1,82 +1,256 @@
-<!DOCTYPE HTML>
 <html>
-	<head>
-		<title>Tibia Website Enhancement Options</title>
-		<link rel="stylesheet" type="text/css" href="./res/css/options.css" />
-	</head>
-	<body onLoad="recallIndicatorOptions(); staminaForm(); recallLinks(); showCharacterList();">
-<!-- Begins Wrapping -->
-		<DIV id="wrapper">
-			<DIV id="Content" class="Content">
-				<DIV class="Box">
-					<DIV class="Corner-tl"></DIV>
-					<DIV class="Corner-tr"></DIV>
-					<DIV class="Border_1" ></DIV>
-<!-- Title -->
-					<DIV class="Title">
-						Tibia's Website Enhancement Options
-					</DIV>
-					<DIV class="Border_2">
-						<DIV class="Border_3">
-							<DIV class="BoxContent">
-<!-- Begins "Content" -->
-              <div style="text-align:right; margin-bottom:5px; margin-top:-3px;"><a href="manual.html">[User Manual]</a></div>
-	<!-- Begins "entry" -->
-								<DIV class="Headline">
-									Section Title
-								</DIV>
-								<div class="HeadlineContent" style="float:none; clear:both;">
-								<!-- Content goes here -->
-								Test Content
-                  <div class="TableContainer">
-                    <div class="CaptionContainer">
-                      <div class="CaptionInnerContainer">
-                        <span class="CaptionEdgeLeftTop"></span>
-                        <span class="CaptionEdgeRightTop"></span>
-                        <span class="CaptionBorderTop"></span>
-                        <span class="CaptionVerticalLeft"></span>
-                        <div class="Text">Inner Table Title</div>
-                        <span class="CaptionVerticalRight"></span>
-                        <span class="CaptionBorderBottom"></span>
-                        <span class="CaptionEdgeLeftBottom"></span>
-                        <span class="CaptionEdgeRightBottom"></span>
-                      </div>
-                    </div>
-                    <div class="InnerTableContainer">
-                      <div id = "indicator_option">
-                        Inner table content
-                      </div>
-                      <div id = "indicator_result"></div>
-                    </div>
-                  </div>
-                  <div class = 'submit'><input type="submit" value="button"/></div>
-								</div>
-	<!-- Ends "entry" -->
-									</DIV>
-								</DIV>
-							<div id='reset'><a href="javascript:;" onclick="">[Reset Defaults]</a></div>
-							</DIV>
-<!-- Ends "Content" -->
-							<DIV class="Border_1"></DIV>
-							<DIV class="CornerWrapper-b">
-								<DIV class="Corner-bl"></DIV>
-							</DIV>
-							<DIV class="CornerWrapper-b">
-								<DIV class="Corner-br"></DIV>
-							</DIV>
-					</DIV>
-				</DIV>
-			</DIV>
-<!-- Ends Wrapping -->
-		<div id="footer">
-			Tibia Website Ehnancement Extension &copy; 2013 by Goodwine.<br>
-			<a href="license.html">BSD License</a> -
-			<a href="#">Report a Bug</a> -
-			<a href="manual.html">User Manual</a>
-			<br>
-			<a href="http://www.tibia.com">Tibia</a> is copyrighted by CipSoft GmbH.<br>
-		</div>
-	</BODY>
-	<script>
-	</script>
+<head>
+  <meta charset="utf-8">
+  <title>Tibia Website Enhancement</title>
+  <link rel="stylesheet" type="text/css" href="/res/css/options.css"/>
+  <script src="/res/js/zepto.min.js" type="text/javascript"></script>
+  <script src="/res/js/options_bootstrap.js" type="text/javascript"></script>
+  <script src="/res/js/options.js" type="text/javascript"></script>
+  <link href="/res/icon/16.png" rel="icon" type="image/png"/>
+</head>
+<body class="frame">
+  <div class="navigation">
+    <h1><a href="#">TWE Settings</a></h1>
+    <ul class="menu">
+      <li class="selected">
+        <a href="#whois">Who is Online?</a>
+      </li>
+      <li>
+        <a href="#fansites">Fansite Links</a>
+      </li>
+      <li>
+        <a href="#forums">Forums</a>
+      </li>
+    </ul>
+    <ul class="menu">
+      <li>
+        <a href="#about">About</a>
+      </li>
+      <li>
+        <a href="#license">License</a>
+      </li>
+    </ul>
+  </div>
+  <div class="mainview view">
+    <div id="whois" class="selected">
+      <header>
+        <h1>Who is Online?</h1>
+      </header>
+      <div class="content">
+        <h2>Indicator</h2>
+        <p>Choose your preferred way of displaying the online indicator</p>
+        <section>
+          <div class="radio">
+            <span class="controlled-setting-with-label">
+              <label>
+                <input type="radio" name="whoisIndicator" id="iconRadio">
+                <span style="width:50px; display:inline-block;">Icon</span>
+                <img src="/res/img/green_indicator.svg" style="height:16px;width:16px" />
+                <span> / </span>
+                <img src="/res/img/gray_indicator.svg" style="height:16px;width:16px" />
+              </label>
+            </span>
+          </div>
+          <div class="radio">
+            <span class="controlled-setting-with-label">
+              <label>
+                <input type="radio" name="whoisIndicator" id="textRadio">
+                <span style="width:50px; display:inline-block;">Text</span>
+                <span style="font-weight:bold;color:#00BF00;">On</span>
+                <span> / </span>
+                <span style="font-weight:bold;color:#EF0000">Off</span>
+              </label>
+            </span>
+          </div>
+        </section>
+        <h2>Loading Strategy</h2>
+        <p><small>
+          The process that checks for online players loads every server to get their online status.
+          This process can cause you lag in-game if you have a very slow internet connection, less
+          than 1Mbps download, and if so, you may want to choose a slower loading strategy.
+        </small></p>
+        <section>
+          <div class="radio">
+            <span class="controlled-setting-with-label">
+              <label>
+                <input type="radio" name="xhrOption" id="iconRadio">
+                <span>I have a normal download speed.</span>
+                <small>Connection &gt; 1Mbps.</small>
+              </label>
+            </span>
+          </div>
+          <div class="radio">
+            <span class="controlled-setting-with-label">
+              <label>
+                <input type="radio" name="xhrOption" id="textRadio">
+                <span>My internet is very slow.</span>
+                <small>Connection &lt; 1Mbps.</small>
+              </label>
+            </span>
+          </div>
+          <div class="radio">
+            <span class="controlled-setting-with-label">
+              <label>
+                <input type="radio" name="xhrOption" id="textRadio">
+                <span>Disable online indicator.</span>
+                <small>What is Internet?</small>
+              </label>
+            </span>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div id="fansites">
+      <header>
+        <h1>Fansite Icon/Links Settings</h1>
+      </header>
+      <div class="content">
+      <p>Choose if you want to (or not) see this icons linking to those fansites listed on the respective categories.</p>
+      <section id="fansiteSection">
+        <!-- Programatically Generated grid of radios -->
+      </section>
+      </div>
+    </div>
+    <div id="forums">
+      <header>
+        <h1>Forum Settings</h1>
+      </header>
+      <div class="content">
+      <h2>Starred Threads</h2>
+      <section>
+      <ul class="highlightable editable" id="starredThreadList">
+        <!-- Programatically Generated highlighted list -->
+      </ul>
+      </section>
+      <h2>Remove URL Warning</h2>
+      <section>
+        <div class="checkbox">
+          <span class="controlled-setting-with-label">
+            <label>
+              <input type="checkbox" id="doNotLookChBox">
+              <span>Remove the <i>[Do not look at external websites. Your account could be hacked.]</i> message.</span>
+            </label>
+          </span>
+        </div>
+      </section>
+      <h2>Extra BBCodes</h2>
+      <p>Choose which extra BBCodes should be active when reading the Forums.</p>
+      <section>
+        <!-- Programatically Generated list of checkboxes -->
+      </section>
+      </div>
+    </div>
+    <div id="about">
+      <header>
+        <h1>About Tibia Website Enhancement</h1>
+      </header>
+      <div class="content">
+        <h2>What is this?</h2>
+        <section>
+        <p>
+          This is a Chrome Extension created to enhance the user experience with thing that <b>I</b>
+          feel that the Tibia's website is missing.<br/>
+          You can read the list of features <a target="_blank" href="https://github.com/Goodwine/TibiaEnhancement"><b>here.</b></a>
+        </p>
+        </section>
+        <h2>Who made this?</h2>
+        <section>
+        So far... only me, Goodwine. You are welcome.
+        <small>Also... Myr Baku did the logo :P</small>
+        </section>
+        <h2>Want to contribute?</h2>
+        <section>
+        You can request for a new feature, or you could go all wizard and fork the project.<br/>
+        To request a new feature, you need a GitHub account.
+        <p>
+          <a href="https://github.com/Goodwine/TibiaEnhancement/issues/new/" title="Requires GitHub account." target="_blank">Click here to request a new feature.</a>
+        </p>
+        </section>
+        <h2>Found a Bug?</h2>
+        <section>
+        To report a bug, you need a GitHub account.
+        <p>
+          <a href="https://github.com/Goodwine/TibiaEnhancement/issues/new/" title="Requires GitHub account." target="_blank">Click here to report a Bug.</a>
+        </p>
+        </section>
+        <h2>No GitHub? Use Twitter!</h2>
+        <section>
+        I understand you may not use GitHub, so you can also contact me via <a href="https://twitter.com/Goodwine" target="_blank">Twitter @Goodwine</a>
+        for anything you may want to discuss, such as bugs, features, random chatting, etc.
+        </section>
+        <h2>Short story</h2>
+        <section>
+        <p>
+          Loooong time ago, there was a guy (who was also a GM back in the days) known as Erig.
+          He created some simple but awesome scripts for GreaseMonkey (an addon for FireFox).
+          For example, one addon showed you who were online when you looked into a guild's page.
+        </p>
+        <p>
+          Then some years ago TibiaML made a programming contest to make a tool useful for Tibia,
+          and since developing a Chrome Extension was way easier than making a FireFox addon,
+          Tibia's Website Enhancement was created.
+        </p>
+        <p>
+          At that time Chrome was still not the most used browser, and Tibia had 90k users on a daily
+          basis, hell... almost every server had 900 players, and there were login queues.</br>
+          Now Chrome is the most used browser, but Tibia has lost a lot of players for several reasons,
+          so yeah... I hope the current player base likes this extension. :)
+        </p>
+        </section>
+      </div>
+    </div>
+    <div id="license">
+      <header>
+        <h1>BSD License</h1>
+      </header>
+      <div class="content">
+        <h2>Tibia Website Enhancement</h2>
+        <section>
+        <p>
+          Copyright &copy; 2013, <b><a target="_blank" href="https://github.com/Goodwine/">Goodwine</a></b>
+          All rights reserved.
+        </p>
+        <p>
+          Redistribution and use in source and binary forms, with or without
+          modification, are permitted provided that the following conditions are
+          met:
+        </p>
+        <ul class="bulletedList">
+          <li>
+            Redistributions of source code must retain the above copyright notice,
+            this list of conditions and the following disclaimer.
+          </li>
+          <li>
+            Redistributions in binary form must reproduce the above copyright notice,
+            this list of conditions and the following disclaimer in the documentation
+            and/or other materials provided with the distribution.
+          </li>
+          <li>
+            Neither the name of <b>Goodwine</b>, or the names of its
+            contributors may be used to endorse or promote products derived from this
+            software without specific prior written permission.
+          </li>
+        </ul>
+        <p>
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "<b>AS IS</b>"
+        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+        ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+        LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+        CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+        SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+        INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+        CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+        ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+        POSSIBILITY OF SUCH DAMAGE.
+        </p>
+        </section>
+        <h2>Tibia</h2>
+        <section>
+          <a href="http://www.tibia.com">Tibia</a> is copyrighted by CipSoft GmbH.
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
 </html>
