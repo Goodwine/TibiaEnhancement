@@ -4,6 +4,8 @@ function enhancement() {
     this.queueXHR = localStorage['queueXHR'];
   if (localStorage['indicator'] != null)
     this.indicator = localStorage['indicator'];
+  if (localStorage['noURLWarning'] != null)
+    this.noURLWarning = localStorage['noURLWarning'];
   if (localStorage['iconFlags'] != null)
     this.iconFlags = JSON.parse(localStorage['iconFlags']);
   if (localStorage['defaultCharacter'] != null)
@@ -31,11 +33,18 @@ enhancement.prototype = {
   playersOnlineRegExp: /subtopic=characters.*?name=(.*?)['"]\s*>(.*?)<\/a><\/td><td.*?>(\d*?)<\/td><td.*?>(.*?)<\/td>/ig,
   /** Flag used to queue XHR one after another if true, all at once if false */
   queueXHR: false,
+  /** Remove URL Warning **/
+  noURLWarning: true,
   /** Kind of indicator to use. */
   indicator: 'icon',
+  /** Flag to prevent several runs of loadAllPlayersOnline **/
+  loadingPlayers: false,
   /** Runs loadPlayersOnline for every server in the list. */
   loadAllPlayersOnline: function() {
-    if (this.queueXHR) {
+    if (this.loadingPlayers)
+      return;
+    if (this.queueXHR == 'true') {
+      this.loadingPlayers = true;
       var xhr = new XMLHttpRequest();
       xhr.__serverIndex = 0;
       xhr.open('GET', this.playersOnlineBaseURL + this.serverList[xhr.__serverIndex]);
@@ -49,15 +58,18 @@ enhancement.prototype = {
           if(this.__serverIndex < this.__enhancement.serverList.length) {
             this.open('GET', this.__enhancement.playersOnlineBaseURL + this.__enhancement.serverList[this.__serverIndex]);
             this.send();
+          } else {
+            this.__enhancement.loadingPlayers=false;
           }
         }
       };
       xhr.send();
-    }
-    else {
+    } else if (this.queueXHR == 'false') {
+      this.loadingPlayers = true;
       for (var i in this.serverList) {
         this.loadPlayersOnline(this.serverList[i]);
       }
+      this.loadingPlayers=false;
     }
   },
   /** Loads a map of players online {name:{lvl,voc}}, saves it to the map playersOnline and
@@ -179,8 +191,17 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
   }
   if (request.getPlayersOnlineTimeout)
     response.playersOnlineTimeout = tibia.playersOnlineTimeout;
-  if (request.getIndicator)
+  if (request.getIndicator) {
+    if(tibia.queueXHR=='none')
+      response.indicator = 'none';
+    else
+      response.indicator = tibia.indicator;
+  }
+  if (request.setIndicator) {
+    localStorage['indicator'] = request.indicator;
+    tibia.indicator = request.indicator;
     response.indicator = tibia.indicator;
+  }
   if (request.getIcons)
     response.icons = {iconList: tibia.iconList, iconFlags: tibia.iconFlags[request.iconFlags]};
   if (request.getDefaultCharacter)
@@ -190,9 +211,9 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
     localStorage['defaultCharacter'] = tibia.defaultCharacter;
     response.defaultCharacter = tibia.defaultCharacter;
   }
-  if(request.getStarredThreads)
+  if (request.getStarredThreads)
     response.starredThreads = tibia.starredThreads;
-  if(request.toggleThreadStar && request.thread) {
+  if (request.toggleThreadStar && request.thread) {
     if(tibia.starredThreads[request.thread.id])
       delete tibia.starredThreads[request.thread.id];
     else
@@ -200,6 +221,28 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
     localStorage['starredThreads'] = JSON.stringify(tibia.starredThreads);
     response.starredThreads = tibia.starredThreads;
     response.table = request.table;
+  }
+  if (request.setQueueXHR) {
+    var load = false;
+    if (tibia.queueXHR == 'none' && request.queueXHR != tibia.queueXHR) {
+      load = true;
+    }
+    localStorage['queueXHR'] = request.queueXHR;
+    tibia.queueXHR = request.queueXHR;
+    response.queueXHR = tibia.queueXHR;
+    if (load) {
+      tibia.loadAllPlayersOnline();
+    }
+  }
+  if (request.setNoURLWarning) {
+    localStorage['noURLWarning'] = request.noURLWarning;
+    tibia.noURLWarning = request.noURLWarning;
+    response.noURLWarning = tibia.noURLWarning;
+  }
+  if (request.loadOptions) {
+    response.indicator = tibia.indicator;
+    response.queueXHR = tibia.queueXHR;
+    response.noURLWarning = tibia.noURLWarning;
   }
   callback(response);
 });
