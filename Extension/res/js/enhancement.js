@@ -150,10 +150,10 @@ enhancement.prototype = {
     }
   },
   iconFlags: {
-    guild: ['tibiaml', 'exhiti', 'pskonejott'],
-    worlds: ['tibiaml', 'exhiti', 'pskonejott'],
-    character: ['tibiaml', 'exhiti', 'pskonejott'],
-    forum: ['tibiaml', 'exhiti', 'pskonejott']
+    guild: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
+    worlds: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
+    character: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats'],
+    forum: ['tibiaml', 'exhiti', 'pskonejott', 'guildstats']
   },
   defaultCharacter: -1,
   starredThreads:{}
@@ -234,15 +234,32 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
       tibia.loadAllPlayersOnline();
     }
   }
-  if (request.setNoURLWarning) {
+  if (request.toggleNoURLWarning) {
     localStorage['noURLWarning'] = request.noURLWarning;
     tibia.noURLWarning = request.noURLWarning;
     response.noURLWarning = tibia.noURLWarning;
+  }
+  if (request.toggleIconFlag) {
+    var iconIndex = tibia.iconFlags[request.iconCategory].indexOf(request.iconFlagName);
+    var iconFlag;
+    if(iconIndex != -1) {
+      tibia.iconFlags[request.iconCategory].splice(iconIndex,1);
+      iconFlag = false;
+    } else {
+      tibia.iconFlags[request.iconCategory].push(request.iconFlagName);
+      iconFlag = true;
+    }
+    localStorage['iconFlags']=JSON.stringify(tibia.iconFlags);
+    response.iconFlagName = request.iconFlagName;
+    response.iconFlagCategory = request.iconFlagCategory;
+    response.iconFlag = iconFlag;
   }
   if (request.loadOptions) {
     response.indicator = tibia.indicator;
     response.queueXHR = tibia.queueXHR;
     response.noURLWarning = tibia.noURLWarning;
+    response.iconList = tibia.iconList;
+    response.iconFlags = tibia.iconFlags;
   }
   callback(response);
 });
