@@ -36,10 +36,10 @@ function loadNewsLinks() {
 				link.innerText = '[Permalink]';
 				link.href = 'http://www.tibia.com/news/?subtopic=newsarchive&id='+row[2];
 				link.style.position = 'absolute';
-				link.style.color = 'white';
 				link.style.fontSize = '7pt';
 				link.target = 'new';
 				if(row[1] == 'News' && i < newsHeadlines.length) {
+          link.style.color = 'white';
 					link.style.right = '10px';
 					link.style.top = '8px';
 					newsHeadlines[i].parentElement.appendChild(link);
