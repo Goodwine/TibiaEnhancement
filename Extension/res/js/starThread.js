@@ -21,6 +21,8 @@ if (temp.length > 0) {
       threadInfo[3]
     );
   }
+  pushAnnouncements(temp[0]);
+  fixCipBorders();
   chrome.extension.sendMessage({
     'getStarredThreads': true
   }, function(response) {
@@ -132,4 +134,30 @@ function showStarTable(starredThreads) {
     starTable.appendChild(row);
   }
   updateStars(starredThreads, true);
+}
+
+function pushAnnouncements(hncContainer) {
+  var rows = $(hncContainer).closest('table').find('tr');
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].getElementsByClassName('HNCContainer').length > 0)
+      break;
+    if (rows[i].firstElementChild.bgColor == "#505050")
+      continue;
+    rows[i].getElementsByTagName('td')[0].colSpan=2;
+  }
+}
+
+function fixCipBorders() {
+  $('.BoardThreadLine').each(function(){$(this).parent()[0].innerHTML=this.innerHTML});
+  $('.CipPost').each(function(){
+    $(this).closest('tr').each(function(){
+      var o = $(this).offset();
+      $(this).find('.CipPost .Text').css({'padding':'10px 0'});
+      var c = $(this).find('.CipPost').parent().offset();
+      $(this).find('.CipBorderTop .CipBorder').css({top:-3, left:o.left-c.left, width:o.width-9});
+      $(this).find('.CipBorderLeft .CipBorderV').css({left:o.left-c.left});
+      $(this).find('.CipBorderBottom .CipBorder').css({bottom:0, left:o.left-c.left, width:o.width-9});
+      $(this).find('.CipBorderRight .CipBorderV').css({left:o.left-c.left+o.width-8});
+    });
+  });
 }
