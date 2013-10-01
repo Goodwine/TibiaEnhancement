@@ -13,7 +13,7 @@
       "default_title": "Tibia's Website Enhancement"
     },
     "content_scripts": [ {
-      "js": [ "res/js/common.js" ],
+      "js": [ "res/js/common.js", "res/js/zepto.min.js" ],
       "matches": [ "http://*.tibia.com/*" ],
       "run_at": "document_start"
     }/*, {
@@ -47,7 +47,7 @@
       "48": "res/icons/48.png",
       "64": "res/icons/64.png"
     },
-    "minimum_chrome_version": "20",
+    "minimum_chrome_version": "29",
     "options_page": "options.html",
     "permissions": [ "tabs", "http://*.tibia.com/*" ],
     "web_accessible_resources": [
