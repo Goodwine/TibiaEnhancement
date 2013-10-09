@@ -42,7 +42,10 @@ for (var i = 0; i < posts.length; i++) {
     continue;
   }
   var charText = posts[i].innerHTML;
-  var name = htmlDecode(charText.match(charRegExp)[1]);
+  var res = charText.match(charRegExp);
+  if(!res)
+    continue;
+  var name = htmlDecode(res[1]);
   var server = charText.match(serverRegExp)[1];
   var indParent = document.createElement('span');
   var iconElement = document.createElement('div');
