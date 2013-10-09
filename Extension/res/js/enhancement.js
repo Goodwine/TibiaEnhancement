@@ -213,6 +213,8 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
   }
   if (request.getStarredThreads)
     response.starredThreads = tibia.starredThreads;
+  if (request.isStarred && request.thread)
+    response.isStarred = tibia.starredThreads[request.thread.id] ? true : false;
   if (request.toggleThreadStar && request.thread) {
     if(tibia.starredThreads[request.thread.id])
       delete tibia.starredThreads[request.thread.id];
@@ -221,6 +223,16 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
     localStorage['starredThreads'] = JSON.stringify(tibia.starredThreads);
     response.starredThreads = tibia.starredThreads;
     response.table = request.table;
+  }
+  if (request.toggleThreadViewStar && request.thread) {
+    if(tibia.starredThreads[request.thread.id]) {
+      delete tibia.starredThreads[request.thread.id];
+      response.isStarred = false;
+    } else {
+      tibia.starredThreads[request.thread.id] = request.thread;
+      response.isStarred = true;
+    }
+    localStorage['starredThreads'] = JSON.stringify(tibia.starredThreads);
   }
   if (request.setQueueXHR) {
     var load = false;

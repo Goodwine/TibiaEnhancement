@@ -8,8 +8,8 @@
 function loadNewsLinks() {
   if(!document.getElementById('newsticker'))
     return;
-	var newsHeadlineDates = document.getElementsByClassName('NewsHeadlineDate');
-	var newsTickerDates = document.getElementsByClassName('NewsTickerDate');
+	var newsHeadlineDates = $('.NewsHeadlineDate');
+	var newsTickerDates = $('.NewsTickerDate');
 	var beginDate = new Date(newsHeadlineDates[newsHeadlineDates.length - 1].innerText.trim().substring(0,11).replace(/\s/g, '.'));
 	var endDate = new Date(newsHeadlineDates[0].innerText.trim().substring(0,11).replace(/\s/g, '.'));
 	var beginDateTicker = new Date(newsTickerDates[newsTickerDates.length - 1].innerText.trim().substring(0,11).replace(/\s/g, '.'));
@@ -22,9 +22,9 @@ function loadNewsLinks() {
 	xhr.open('POST', 'http://www.tibia.com/news/?subtopic=newsarchive');
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4 && this.status == 200) {
-			var newsHeadlines = document.getElementsByClassName('NewsHeadlineText');
+			var newsHeadlines = $('.NewsHeadlineText');
 			var i = 0;
-			var newsTickers = document.getElementsByClassName('NewsTickerText');
+			var newsTickers = $('.NewsTickerText');
 			var j = 0;
 			var regexp = /<small>(.*?)<\/small><\/td>\s*<td><a .*?href=['"]http:\/\/www\.tibia\.com\/news\/\?subtopic=newsarchive.*?id=(\d+).*?>/ig;
 			var row = null;
@@ -52,9 +52,7 @@ function loadNewsLinks() {
 				}
 			}
 			// Pushes News Tickers' content, so the link fits nicely.
-			var s = document.createElement('style');
-			s.innerHTML = '.NewsTickerShortText, .NewsTickerFullText{margin-left: 85px !important; margin-right: 85px !important; height: auto !important;}';
-			document.getElementsByTagName('body')[0].appendChild(s);
+			$('.NewsTickerShortText,.NewsTickerFullText').css({marginLeft:'85px !important',marginRight:'85px !important',height:'auto !important'});
 		}
 	};
 	var params =
@@ -88,7 +86,7 @@ if(newsArchiveId && newsArchiveId.length > 0) {
   link.target = 'new';
   link.style.right = '10px';
   link.style.top = '8px';
-  document.getElementsByClassName('NewsHeadlineText')[0].parentElement.appendChild(link);
+  $('.NewsHeadlineText')[0].parentElement.appendChild(link);
 } else {
 	loadNewsLinks();
 }

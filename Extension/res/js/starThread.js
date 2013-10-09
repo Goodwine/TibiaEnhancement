@@ -3,9 +3,12 @@
 
 threads = {};
 starTable = null;
+starThread = null;
 sThreads = {};
+currThread = null;
+currThreadTable = null;
 
-temp = document.getElementsByClassName('HNCContainer');
+temp = $('.HNCContainer');
 if (temp.length > 0) {
   var regexp = /<a .*?href=.*?threadid=(\d+).*?>(.*?)<\/a>.*?<a .*?href=.*?subtopic=characters.*?>(.*?)<\/a>/;
   var head = temp[0].parentNode.parentNode.previousElementSibling;
@@ -21,11 +24,22 @@ if (temp.length > 0) {
       threadInfo[3]
     );
   }
-  pushAnnouncements(temp[0]);
-  fixCipBorders();
+}
+
+if(/action=thread/.test(window.location.href)) {
+  chrome.extension.sendMessage({
+    'isStarred': true,
+    'thread': getCurrentThread()
+  }, function(response) {
+    updateThreadStar(response.isStarred);
+  });
+}
+else {
   chrome.extension.sendMessage({
     'getStarredThreads': true
   }, function(response) {
+    pushAnnouncements(temp[0]);
+    fixCipBorders();
     updateStars(response.starredThreads);
   });
 }
@@ -85,6 +99,17 @@ function updateStars(starredThreads, ignoreTable) {
   }
 }
 
+function updateThreadStar(isStarred) {
+  if (starThread == null) {
+    createThreadStar();
+  }
+  if (isStarred) {
+    starThread.css({background:"url('" + chrome.extension.getURL('/res/img/star_on.gif') + "')"});
+  } else {
+    starThread.css({background:"url('" + chrome.extension.getURL('/res/img/star_off.gif') + "')"});
+  }
+}
+
 function showStarTable(starredThreads) {
   if(starTable != null)
     starTable.parentElement.removeChild(starTable);
@@ -98,9 +123,10 @@ function showStarTable(starredThreads) {
   starTable.cellPadding=3;
   starTable.cellSpacing=1;
   starTable.width='100%';
-  var container = document.getElementsByClassName('Box')[0];
-  var before = container.getElementsByTagName('table')[1];
-  before.parentElement.insertBefore(starTable, container.getElementsByTagName('table')[1]);
+  starTable.style.marginBottom='10px';
+  var container = $('.Box')[0];
+  var before = $(container).find('table')[1];
+  before.parentElement.insertBefore(starTable, $(container).find('table')[1]);
   starTable.innerHTML='';
   var head = document.createElement('tr');
   var sHead = document.createElement('td');
@@ -136,14 +162,29 @@ function showStarTable(starredThreads) {
   updateStars(starredThreads, true);
 }
 
+function createThreadStar() {
+  var table = getThreadTable();
+  starThread = $("<a/>", {css:{width:'15px',height:'15px',display:'inline-block',margin:'0'},href:'javascript:;'});
+  starThread.click(function(){
+    chrome.extension.sendMessage({
+      'toggleThreadViewStar': true,
+      'thread': getCurrentThread(),
+    }, function(response) {
+      updateThreadStar(response.isStarred);
+    });
+  });
+  starThread.insertBefore($(table).find('tr .Text').last().children().first());
+}
+
 function pushAnnouncements(hncContainer) {
+  if (hncContainer == null) return;
   var rows = $(hncContainer).closest('table').find('tr');
   for (var i = 0; i < rows.length; i++) {
-    if (rows[i].getElementsByClassName('HNCContainer').length > 0)
+    if ($(rows[i]).find('.HNCContainer').length > 0)
       break;
     if (rows[i].firstElementChild.bgColor == "#505050")
       continue;
-    rows[i].getElementsByTagName('td')[0].colSpan=2;
+    $(rows[i]).find('td')[0].colSpan=2;
   }
 }
 
@@ -160,4 +201,30 @@ function fixCipBorders() {
       $(this).find('.CipBorderRight .CipBorderV').css({left:o.left-c.left+o.width-8});
     });
   });
+}
+
+function getCurrentThread() {
+  if (currThread == null) {
+    var table = getThreadTable();
+    currThread = {
+      id: table.next('table')[0].innerHTML.match(/<td.*?bgcolor=['"]#505050['"].*?><b>Thread #(\d*?)<\/b><\/td>/i)[1],
+      title: table.find('tr .Text b')[0].innerText,
+      poster: htmlDecode(table.next('table')[0].innerHTML.match(/<a.*?href=['"].*?subtopic=characters.*?['"]>(.*?)<\/a>/)[1])
+    }
+  }
+  return currThread;
+}
+
+function getThreadTable() {
+  if(currThreadTable == null) {
+    var tables = $('table');
+    for(var i = 0; i < tables.length; i++) {
+      var res = tables[i].innerHTML.match(/<td.*?bgcolor=['"]#505050['"].*?><b>Thread #(\d*?)<\/b><\/td>/i);
+      if(res && res.length > 1) {
+        currThreadTable = tables[i - 1];
+        break;
+      }
+    }
+  }
+  return $(currThreadTable);
 }
