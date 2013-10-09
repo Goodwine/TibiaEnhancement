@@ -1,6 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Tibia's Website Enhancement",
+    "short_name": "Tibia's WE",
     "description": "Enhances your Tibia experience when browsing the website.",
     "background": {
       "scripts": [
@@ -16,16 +17,10 @@
       "js": [ "res/js/common.js", "res/js/zepto.min.js" ],
       "matches": [ "http://*.tibia.com/*" ],
       "run_at": "document_start"
-    }/*, {
-      "js": [ "scripts/staminaml.js" ],
-      "matches": [ "http://*.tibiaml.com/stamina_calculator/" ]
-    }*/, {
+    }, {
       "js": [ "res/js/newslinks.js" ],
       "matches": [ "http://*.tibia.com/news/*" ]
-    }/*, {
-      "js": [ "scripts/bbcode.js", "scripts/postChar.js" ],
-      "matches": [ "http://forum.tibia.com/forum*" ]
-    }*/, {
+    }, {
       "js": [ "res/js/character.js" ],
       "matches": [ "http://*.tibia.com/community/?*subtopic=character*" ]
     }, {
