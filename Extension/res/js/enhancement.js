@@ -232,6 +232,7 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
       tibia.starredThreads[request.thread.id] = request.thread;
       response.isStarred = true;
     }
+    response.thread = request.thread;
     localStorage['starredThreads'] = JSON.stringify(tibia.starredThreads);
   }
   if (request.setQueueXHR) {

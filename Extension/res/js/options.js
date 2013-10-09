@@ -1,5 +1,5 @@
 $(function() {
-  chrome.extension.sendMessage({loadOptions:true}, function(response) {
+  chrome.extension.sendMessage({loadOptions:true,getStarredThreads:true}, function(response) {
     /* programatically generated stuff */
     /* fansite links */
     var fansiteSection = document.getElementById('fansiteSection');
@@ -43,6 +43,19 @@ $(function() {
     fansiteSection.appendChild(fansiteTable);
 
     /* starred threads */
+    if (Object.keys(response.starredThreads).length > 0) {
+      for(var i in response.starredThreads) {
+        var e = $('<li><a href="#"><dl><dt>' + response.starredThreads[i].title +
+        '</dt><dd>'+ response.starredThreads[i].poster + '</dd></dl></a>' +
+        '<a id="thread-'+i+'" href="#" class="delete">delete</a></li>');
+        e.find('a.delete')[0]._thread = response.starredThreads[i];
+        e.appendTo($('#starredThreadList'));
+      }
+    } else {
+      var e = $('<li><a href="#"><dl><dt>No Starred Threads</dt></dl></a>');
+      e.appendTo($('#starredThreadList'));
+    }
+
     /* BBCode */
 
     /* load values */
@@ -82,6 +95,16 @@ $(function() {
       chrome.extension.sendMessage({toggleIconFlag:true, iconCategory:icon[0], iconFlagName:icon[1]}, function(response) {
         $('#fansiteSection #'+response.iconCategory+'-'+response.iconFlagName).each(function(){this.checked=response.iconFlag;});
       })
+    });
+    $('#starredThreadList a.delete').click(function(){
+      chrome.extension.sendMessage({
+        'toggleThreadViewStar': true,
+        'thread': this._thread,
+      }, function(response) {
+        if(!response.isStarred) {
+          $('#thread-'+response.thread.id).closest('li').remove();
+        }
+      });
     });
   });
 });
