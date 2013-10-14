@@ -32,7 +32,7 @@ enhancement.prototype = {
   playersOnlineBaseURL: 'http://www.tibia.com/community/?subtopic=worlds&world=',
   playersOnlineRegExp: /subtopic=characters.*?name=(.*?)['"]\s*>(.*?)<\/a><\/td><td.*?>(\d*?)<\/td><td.*?>(.*?)<\/td>/ig,
   /** Flag used to queue XHR one after another if true, all at once if false */
-  queueXHR: false,
+  queueXHR: 'false',
   /** Remove URL Warning **/
   noURLWarning: true,
   /** Kind of indicator to use. */
